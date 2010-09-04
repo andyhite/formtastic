@@ -906,9 +906,7 @@ module Formtastic #:nodoc:
           template.content_tag(:div, Formtastic::Util.html_safe(li_content), li_options)
         end
         
-        template.content_tag(:fieldset,
-          legend_tag(method, options) << template.content_tag(:div, Formtastic::Util.html_safe(list_item_content.join))
-        )
+        template.content_tag(:div, Formtastic::Util.html_safe(list_item_content.join))
       end
       alias :boolean_radio_input :radio_input
 
@@ -1187,7 +1185,7 @@ module Formtastic #:nodoc:
         fieldset_content = legend_tag(method, options)
         fieldset_content << self.create_hidden_field_for_check_boxes(input_name, value_as_class) unless hidden_fields
         fieldset_content << template.content_tag(:div, Formtastic::Util.html_safe(list_item_content.join))
-        template.content_tag(:fieldset, fieldset_content)
+        fieldset_content
       end
 
       # Used by check_boxes input. The selected values will be set either by:
