@@ -109,7 +109,7 @@ module Formtastic #:nodoc:
         send(:"inline_#{type}_for", method, options)
       end.compact.join("\n")
 
-      return template.content_tag(:li, Formtastic::Util.html_safe(list_item_content), wrapper_html)
+      return template.content_tag(:div, Formtastic::Util.html_safe(list_item_content), wrapper_html)
     end
 
     # Creates an input fieldset and ol tag wrapping for use around a set of inputs.  It can be
@@ -350,7 +350,7 @@ module Formtastic #:nodoc:
       element_class = ['commit', options.delete(:class)].compact.join(' ') # TODO: Add class reflecting on form action.
       accesskey = (options.delete(:accesskey) || self.class.default_commit_button_accesskey) unless button_html.has_key?(:accesskey)
       button_html = button_html.merge(:accesskey => accesskey) if accesskey
-      template.content_tag(:li, Formtastic::Util.html_safe(self.submit(text, button_html)), :class => element_class)
+      template.content_tag(:div, Formtastic::Util.html_safe(self.submit(text, button_html)), :class => element_class)
     end
 
     # A thin wrapper around #fields_for to set :builder => Formtastic::SemanticFormBuilder
@@ -466,7 +466,7 @@ module Formtastic #:nodoc:
       return nil if full_errors.blank?
       html_options[:class] ||= "errors"
       template.content_tag(:ul, html_options) do
-        Formtastic::Util.html_safe(full_errors.map { |error| template.content_tag(:li, Formtastic::Util.html_safe(error)) }.join)
+        Formtastic::Util.html_safe(full_errors.map { |error| template.content_tag(:div, Formtastic::Util.html_safe(error)) }.join)
       end
     end
 
@@ -903,11 +903,11 @@ module Formtastic #:nodoc:
           )
 
           li_options = value_as_class ? { :class => [method.to_s.singularize, value.to_s.downcase].join('_') } : {}
-          template.content_tag(:li, Formtastic::Util.html_safe(li_content), li_options)
+          template.content_tag(:div, Formtastic::Util.html_safe(li_content), li_options)
         end
         
         template.content_tag(:fieldset,
-          legend_tag(method, options) << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
+          legend_tag(method, options) << template.content_tag(:div, Formtastic::Util.html_safe(list_item_content.join))
         )
       end
       alias :boolean_radio_input :radio_input
@@ -1055,7 +1055,7 @@ module Formtastic #:nodoc:
             opts = strip_formtastic_options(options).merge(:prefix => @object_name, :field_name => field_name, :default => datetime)
             item_label_text = labels[input] || ::I18n.t(input.to_s, :default => input.to_s.humanize, :scope => [:datetime, :prompts])
 
-            list_items_capture << template.content_tag(:li, Formtastic::Util.html_safe([
+            list_items_capture << template.content_tag(:div, Formtastic::Util.html_safe([
                 !item_label_text.blank? ? template.content_tag(:label, Formtastic::Util.html_safe(item_label_text), :for => input_id) : "",
                 template.send(:"select_#{input}", datetime, opts, html_options.merge(:id => input_id))
               ].join(""))
@@ -1181,12 +1181,12 @@ module Formtastic #:nodoc:
           )
 
           li_options = value_as_class ? { :class => [method.to_s.singularize, value.to_s.downcase].join('_') } : {}
-          template.content_tag(:li, Formtastic::Util.html_safe(li_content), li_options)
+          template.content_tag(:div, Formtastic::Util.html_safe(li_content), li_options)
         end
 
         fieldset_content = legend_tag(method, options)
         fieldset_content << self.create_hidden_field_for_check_boxes(input_name, value_as_class) unless hidden_fields
-        fieldset_content << template.content_tag(:ol, Formtastic::Util.html_safe(list_item_content.join))
+        fieldset_content << template.content_tag(:div, Formtastic::Util.html_safe(list_item_content.join))
         template.content_tag(:fieldset, fieldset_content)
       end
 
@@ -1368,7 +1368,7 @@ module Formtastic #:nodoc:
         # Ruby 1.9: String#to_s behavior changed, need to make an explicit join.
         contents = contents.join if contents.respond_to?(:join)
         fieldset = template.content_tag(:fieldset,
-          Formtastic::Util.html_safe(legend) << template.content_tag(:ol, Formtastic::Util.html_safe(contents)),
+          Formtastic::Util.html_safe(legend) << template.content_tag(:div, Formtastic::Util.html_safe(contents)),
           html_options.except(:builder, :parent)
         )
 
@@ -1400,7 +1400,7 @@ module Formtastic #:nodoc:
             template.content_tag(:legend,
                 self.label(method, options_for_label(options).merge(:for => options.delete(:label_for))), :class => 'label'
               ) <<
-            template.content_tag(:ol, Formtastic::Util.html_safe(contents))
+            template.content_tag(:div, Formtastic::Util.html_safe(contents))
           )
       end
 
